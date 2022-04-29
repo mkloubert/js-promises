@@ -22,8 +22,17 @@
   SOFTWARE.
 **/
 
-export * from "./waitFor";
-export * from "./withCancellation";
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+/**
+ * An error, which is thrown if a condition failed,
+ */
+export class ConditionFailedError extends Error {
+  /**
+   * Initializes a new instance of that class.
+   *
+   * @param {any} innerError The inner error.
+   * @param {string} [message] The optional and custom message.
+   */
+  public constructor(public readonly innerError: any, message?: string) {
+    super(message);
+  }
+}

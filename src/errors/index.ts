@@ -23,6 +23,7 @@
 **/
 
 export * from "./CancellationError";
+export * from "./ConditionFailedError";
 export * from "./MaximumTriesReachedError";
 export * from "./NotSupportedError";
 export * from "./TimeoutError";

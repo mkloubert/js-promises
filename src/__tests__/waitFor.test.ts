@@ -22,8 +22,34 @@
   SOFTWARE.
 **/
 
-export * from "./waitFor";
-export * from "./withCancellation";
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+import { waitFor, WaitForCondition, } from "../functions";
+
+describe("waitFor() function", () => {
+  it("should be execut an action after a condition matches a criteria", async () => {
+    const arg1Value = 23979;
+    const resultSummand = 5979;
+    const stateValue = 1234;
+    const maxCounterValue = 10;
+
+    let counter = 0;
+    const condition: WaitForCondition = (context) => {
+      return new Promise((resolve) => {
+        if (++counter === maxCounterValue) {
+          context.state = stateValue;
+
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    };
+
+    const result = await waitFor(condition, async ({ state, }, arg1: number) => {
+      // 'state' should be 1234 (s. above)
+      return resultSummand + arg1 + state;
+    }, arg1Value);
+
+    expect(result).toBe(arg1Value + resultSummand + stateValue);
+    expect(counter).toBe(maxCounterValue);
+  });
+});

@@ -55,6 +55,28 @@ queue.stop()
 assert.strictEqual(counter, promises.length)
 ```
 
+### waitFor(condition: WaitForCondition, action: WaitForAction, ...args: any[])
+
+> Invokes an action or promise, but waits for a condition.
+
+```typescript
+import { waitFor, WaitForActionContext, WaitForCondition } from "@marcelkloubert/promises"
+
+const waitForFile = async (context) => {
+  // use context.cancel() function
+  // to cancel the operation
+  // maybe for a timeout
+
+  // setup 'state' value for upcoming
+  // action
+  context.state = "Foo Bar BUZZ" (s. below)
+}
+
+const result = await waitFor(waitForFile, async ({ state }: WaitForActionContext) => {
+  // state === "Foo Bar BUZZ" (s. above)
+})
+```
+
 ### withCancellation(action: WithCancellationAction, ...args: any[])
 
 > Invokes an action or promise, which can be cancelled.
