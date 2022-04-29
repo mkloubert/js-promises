@@ -22,4 +22,5 @@
   SOFTWARE.
 **/
 
+export * from "./withRetries";
 export * from "./withTimeout";

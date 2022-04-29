@@ -22,8 +22,8 @@
   SOFTWARE.
 **/
 
-import { TimeoutError, } from "../errors/TimeoutError";
-import { asAsync, throwIfNoFunctionOrPromise, } from "../utils";
+import { TimeoutError, } from "../errors";
+import { asAsync, } from "../utils";
 
 /**
  * A possible value for action parameter of 'withTimeout()' function.
@@ -64,15 +64,13 @@ export type WithTimeoutAction<T = any> =
  * @throws TimeoutError Action has run into a timeout.
  */
 export function withTimeout<T = any>(action: WithTimeoutAction<T>, timeout: number, ...args: any[]): Promise<T> {
-  throwIfNoFunctionOrPromise(action);
+  const asyncFunc = asAsync<T>(action);
 
   if (typeof timeout !== "number") {
     throw new TypeError("timeout must be of type number");
   }
 
   return new Promise<T>((resolve, reject) => {
-    const asyncFunc = asAsync<T>(action);
-
     const timer = setTimeout(() => {
       reject(new TimeoutError());
     }, timeout);

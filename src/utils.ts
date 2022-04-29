@@ -50,6 +50,11 @@ export function asAsync<T = any>(action: AsyncAction<T>): AsAsyncResult<T> {
   }
 }
 
+export function isNullOrUndefined(value: unknown): value is (null | typeof undefined) {
+  return typeof value === "undefined" ||
+    value === null;
+}
+
 export function throwIfNoFunctionOrPromise(value: unknown) {
   if (typeof value !== "function" && !(value instanceof Promise)) {
     throw new TypeError("value must be of type function or Promise");

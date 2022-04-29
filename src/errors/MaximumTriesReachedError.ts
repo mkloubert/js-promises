@@ -22,5 +22,31 @@
   SOFTWARE.
 **/
 
-export * from "./MaximumTriesReachedError";
-export * from "./TimeoutError";
+/**
+ * An error item for a 'MaximumTriesReachedError' instance.
+ */
+export interface MaximumTriesReachedErrorItem {
+  /**
+   * The time of the execution.
+   */
+  elapsed?: number;
+  /**
+   * The error.
+   */
+  error: any;
+}
+
+/**
+ * An error which is throw of maximum number retries reached.
+ */
+export class MaximumTriesReachedError extends Error {
+  /**
+   * Initializes a new instance of that class.
+   *
+   * @param {MaximumTriesReachedErrorItem[]} errors All thrown errors.
+   * @param {string} [message] The custom and optional message.
+   */
+  public constructor(public readonly errors: MaximumTriesReachedErrorItem[], message?: string) {
+    super(message);
+  }
+}
