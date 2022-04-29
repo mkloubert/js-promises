@@ -16,24 +16,31 @@ npm i @marcelkloubert/promises
 
 ## Usage
 
-### withTimeout(action: WithTimeoutAction, timeout: number, ...args: any[])
+### withCancellation(action: WithCancellationAction, ...args: any[])
 
 ```typescript
-import { TimeoutError, withTimeout } from "@marcelkloubert/promises"
+import { CancellationError, withCancellation, WithCancellationActionContext } from "@marcelkloubert/promises"
 
-const action = () => {
-  return new Promise<string>((resolve) => {
-    setTimeout(() => result("FOO"), 1000)
-  })
+const promise = withCancellation(async (context: WithCancellationActionContext) => {
+  let hasBeenFinished = false
+  while (!context.cancellationRequested && !hasBeenFinished) {
+    // do some long work here
+  }
+})
+
+setTimeout(() => {
+  promise.cancel("Promise action takes too long")
+}, 10000)
+
+try {
+  await promise
+} catch (ex) {
+  if (ex instanceof CancellationError) {
+    // has been cancelled
+  } else {
+    // other error
+  }
 }
-
-// submit action as function
-// should NOT throw a TimeoutError
-const fooResult1 = await withTimeout(action, 10000)
-
-// submit action as Promise
-// this should throw a TimeoutError
-const fooResult2 = await withTimeout(action(), 10000)
 ```
 
 ### withRetries(action: WithRetriesAction, optionsOrMaxRetries: WithRetriesOptions | number, ...args: any[])
@@ -57,6 +64,26 @@ try {
   // error should be a MaximumTriesReachedError instance
   console.error("Invokation of myLongAction failed", error)
 }
+```
+
+### withTimeout(action: WithTimeoutAction, timeout: number, ...args: any[])
+
+```typescript
+import { TimeoutError, withTimeout } from "@marcelkloubert/promises"
+
+const action = () => {
+  return new Promise<string>((resolve) => {
+    setTimeout(() => result("FOO"), 1000)
+  })
+}
+
+// submit action as function
+// should NOT throw a TimeoutError
+const fooResult1 = await withTimeout(action, 10000)
+
+// submit action as Promise
+// this should throw a TimeoutError
+const fooResult2 = await withTimeout(action(), 10000)
 ```
 
 ### withWorker(workerFileOrUrl: string | URL, options?: WithWorkerOptions)

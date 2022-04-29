@@ -61,7 +61,7 @@ export interface WithCancellationActionContext {
  * })
  *
  * setTimeout(() => {
- *   promise.cancel("Actions takes too long")
+ *   promise.cancel("Promise action takes too long")
  * }, 10000)
  *
  * try {
