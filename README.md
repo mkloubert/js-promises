@@ -221,7 +221,7 @@ const fooResult1 = await withTimeout(action, 10000)
 
 // submit action as Promise
 // this should throw a TimeoutError
-const fooResult2 = await withTimeout(action(), 10000)
+const fooResult2 = await withTimeout(action(), 100)
 ```
 
 ### withWorker(workerFileOrUrl: string | URL, options?: WithWorkerOptions): Promise

@@ -52,7 +52,7 @@ export type WithTimeoutAction<T = any> =
  *
  * // submit action as Promise
  * // this should throw a TimeoutError
- * const fooResult2 = await withTimeout(action(), 10000)
+ * const fooResult2 = await withTimeout(action(), 100)
  * ```
  *
  * @param {WithTimeoutAction<T = any>} action The action to invoke.
