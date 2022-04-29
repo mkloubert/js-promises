@@ -22,11 +22,39 @@
   SOFTWARE.
 **/
 
-export * from "./doRepeat";
-export * from "./isPromise";
-export * from "./isPromiseLike";
-export * from "./waitFor";
-export * from "./withCancellation";
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+import { isNullOrUndefined, } from "../utils";
+
+/**
+ * Checks if a value is a simple PromiseLike.
+ *
+ * @example
+ * ```
+ * import { isPromiseLike } from "@marcelkloubert/promises"
+ * import Bluebird from "bluebird"
+ *
+ * // all are (true)
+ * isPromiseLike(Promise.resolve("Foo"))
+ * isPromiseLike(Bluebird.resolve("Foo"))
+ * isPromiseLike({
+ *   then: (onfulfilled?: Function, onrejected?: Function): any => { },
+ * })
+ *
+ * // all are (false)
+ * isPromiseLike("Foo")
+ * isPromiseLike({ })
+ * isPromiseLike(null)
+ * ```
+ *
+ * @param {any} value The value to check.
+ *
+ * @returns {boolean} Is a PromiseLike or not.
+ */
+export function isPromiseLike(value: any): value is PromiseLike<unknown> {
+  const isObject = () => !isNullOrUndefined(value) &&
+    (typeof value === "object" || typeof value === "function");
+
+  return value instanceof Promise ||
+    (isObject() &&
+      typeof value.then === "function"
+    );
+}

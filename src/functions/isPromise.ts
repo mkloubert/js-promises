@@ -22,11 +22,37 @@
   SOFTWARE.
 **/
 
-export * from "./doRepeat";
-export * from "./isPromise";
-export * from "./isPromiseLike";
-export * from "./waitFor";
-export * from "./withCancellation";
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+import { isPromiseLike, } from "./isPromiseLike";
+
+/**
+ * Checks if a value is a Promise.
+ *
+ * @example
+ * ```
+ * import { isPromise } from "@marcelkloubert/promises"
+ * import Bluebird from "bluebird"
+ *
+ * // all are (true)
+ * isPromise(Promise.resolve("Foo"))
+ * isPromise(Bluebird.resolve("Foo"))
+ * isPromise({
+ *   then: (onfulfilled?: Function, onrejected?: Function): any => { },
+ *   catch: (onrejected?: Function) => { },
+ * })
+ *
+ * // all are (false)
+ * isPromise("Foo")
+ * isPromise({
+ *   then: (onfulfilled?: Function, onrejected?: Function): any => { },
+ * })
+ * isPromise(null)
+ * ```
+ *
+ * @param {any} value The value to check.
+ *
+ * @returns {boolean} Is a Promise or not.
+ */
+export function isPromise(value: any): value is Promise<unknown> {
+  return isPromiseLike(value) &&
+    typeof (value as any).catch === "function";
+}

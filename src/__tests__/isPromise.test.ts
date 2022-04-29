@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+
 /**
   The MIT License (MIT)
 
@@ -22,11 +24,51 @@
   SOFTWARE.
 **/
 
-export * from "./doRepeat";
-export * from "./isPromise";
-export * from "./isPromiseLike";
-export * from "./waitFor";
-export * from "./withCancellation";
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+import { isPromise, } from "..";
+import Bluebird from "bluebird";
+
+describe("isPromise() function", () => {
+  it("should all be Promises", async () => {
+    const promises = [
+      Promise.resolve("Foo"),
+      Bluebird.resolve("Foo"),
+      {
+        "then": () => { },
+        "catch": () => { },
+      },
+    ];
+
+    for (const item of promises) {
+      expect(isPromise(item)).toBe(true);
+    }
+  });
+
+  it("should all be no Promises", async () => {
+    const noPromies = [
+      null,
+      {},
+      {
+        "then": () => { },
+      },
+      {
+        "catch": () => { },
+      },
+      {
+        "then": 4242,
+        "catch": () => { },
+      },
+      {
+        "then": () => { },
+        "catch": 23979,
+      },
+      5979,
+      undefined,
+      "Foo",
+      () => { },
+    ];
+
+    for (const item of noPromies) {
+      expect(isPromise(item)).toBe(false);
+    }
+  });
+});

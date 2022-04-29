@@ -16,7 +16,7 @@ npm i @marcelkloubert/promises
 
 ## Usage
 
-### doRepeat(count: number, action: DoRepeatAction, ...args: any[])
+### doRepeat(count: number, action: DoRepeatAction, ...args: any[]): Promise
 
 > Repeats an action or promise.
 
@@ -38,6 +38,51 @@ const results = await doRepeat(repeatCount, async (context: DoRepeatActionContex
 
 assert.strictEqual(results.length, repeatCount)
 assert.strictEqual(counter, results.length)
+```
+
+### isPromise(value: any): boolean
+
+> Checks if a value is a Promise.
+
+```typescript
+import { isPromise } from "@marcelkloubert/promises"
+import Bluebird from "bluebird"
+
+// all are (true)
+isPromise(Promise.resolve("Foo"))
+isPromise(Bluebird.resolve("Foo"))
+isPromise({
+  then: (onfulfilled?: Function, onrejected?: Function): any => { },
+  catch: (onrejected?: Function) => { },
+})
+
+// all are (false)
+isPromise("Foo")
+isPromise({
+  then: (onfulfilled?: Function, onrejected?: Function): any => { },
+})
+isPromise(null)
+```
+
+### isPromiseLike(value: any): boolean
+
+> Checks if a value is a PromiseLike.
+
+```typescript
+import { isPromiseLike } from "@marcelkloubert/promises"
+import Bluebird from "bluebird"
+
+// all are (true)
+isPromiseLike(Promise.resolve("Foo"))
+isPromiseLike(Bluebird.resolve("Foo"))
+isPromiseLike({
+  then: (onfulfilled?: Function, onrejected?: Function): any => { },
+})
+
+// all are (false)
+isPromiseLike("Foo")
+isPromiseLike({ })
+isPromiseLike(null)
 ```
 
 ### PromiseQueue
@@ -81,7 +126,7 @@ queue.stop()
 assert.strictEqual(counter, promises.length)
 ```
 
-### waitFor(condition: WaitForCondition, action: WaitForAction, ...args: any[])
+### waitFor(condition: WaitForCondition, action: WaitForAction, ...args: any[]): Promise
 
 > Invokes an action or promise, but waits for a condition.
 
@@ -103,7 +148,7 @@ const result = await waitFor(waitForFile, async ({ state }: WaitForActionContext
 })
 ```
 
-### withCancellation(action: WithCancellationAction, ...args: any[])
+### withCancellation(action: WithCancellationAction, ...args: any[]): Promise
 
 > Invokes an action or promise, which can be cancelled.
 
@@ -132,7 +177,7 @@ try {
 }
 ```
 
-### withRetries(action: WithRetriesAction, optionsOrMaxRetries: WithRetriesOptions | number, ...args: any[])
+### withRetries(action: WithRetriesAction, optionsOrMaxRetries: WithRetriesOptions | number, ...args: any[]): Promise
 
 > Invokes an action or promise and throws an error if a maximum number of tries has been reached.
 
@@ -157,7 +202,7 @@ try {
 }
 ```
 
-### withTimeout(action: WithTimeoutAction, timeout: number, ...args: any[])
+### withTimeout(action: WithTimeoutAction, timeout: number, ...args: any[]): Promise
 
 > Invokes an action or promise and throws an error on a timeout.
 
@@ -179,7 +224,7 @@ const fooResult1 = await withTimeout(action, 10000)
 const fooResult2 = await withTimeout(action(), 10000)
 ```
 
-### withWorker(workerFileOrUrl: string | URL, options?: WithWorkerOptions)
+### withWorker(workerFileOrUrl: string | URL, options?: WithWorkerOptions): Promise
 
 > Wraps the execution of a worker into a Promise.
 
