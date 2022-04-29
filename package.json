@@ -67,7 +67,9 @@
     "bluebird",
     "concurrency",
     "concurrencies",
-    "concurrently"
+    "concurrently",
+    "queue",
+    "queues"
   ],
   "author": "Marcel Joachim Kloubert",
   "license": "MIT",
