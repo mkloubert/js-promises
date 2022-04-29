@@ -1,0 +1,11 @@
+{
+  "extends": "@marcelkloubert/tsconfig",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "declaration": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
