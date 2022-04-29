@@ -22,7 +22,4 @@
   SOFTWARE.
 **/
 
-export * from "./withCancellation";
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+export * from "./CancelablePromise";

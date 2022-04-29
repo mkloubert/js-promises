@@ -36,7 +36,7 @@ import { NotSupportedError, } from "../errors";
 export interface WithWorkerOptions {
   /**
    * Is invoked if a message has been received from worker.
-   * 
+   *
    * @param {any} message The received message.
    */
   onMessage?: ((message: any) => any) | null;
@@ -80,7 +80,7 @@ export function withWorker<T = any>(workerFileOrUrl: string | URL, options: With
     throw new TypeError("options must be of type object");
   }
 
-  const { onMessage, workerData } = options;
+  const { onMessage, workerData, } = options;
 
   return new Promise<WithWorkerResult<T>>((resolve, reject) => {
     invokeInEnvironment({

@@ -22,7 +22,8 @@
   SOFTWARE.
 **/
 
-export * from "./withCancellation";
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+/**
+ * A cancellation error.
+ */
+export class CancellationError extends Error {
+}

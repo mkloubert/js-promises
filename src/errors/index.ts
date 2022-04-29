@@ -22,6 +22,7 @@
   SOFTWARE.
 **/
 
+export * from "./CancellationError";
 export * from "./MaximumTriesReachedError";
 export * from "./NotSupportedError";
 export * from "./TimeoutError";
