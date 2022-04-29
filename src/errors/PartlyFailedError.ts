@@ -22,9 +22,18 @@
   SOFTWARE.
 **/
 
-export * from "./doRepeat";
-export * from "./waitFor";
-export * from "./withCancellation";
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+/**
+ * An error, which is thrown if a least one execution failed.
+ */
+export class PartlyFailedError<T = any> extends Error {
+  /**
+   * Initializes a new instance of that class.
+   *
+   * @param {T[]} succeeded The list of succeeded results.
+   * @param {any} innerError The inner error.
+   * @param {string} [message] The optional and custom message.
+   */
+  public constructor(public readonly succeeded: T[], public readonly innerError: any, message?: string) {
+    super(message);
+  }
+}

@@ -16,7 +16,33 @@ npm i @marcelkloubert/promises
 
 ## Usage
 
+### doRepeat(count: number, action: DoRepeatAction, ...args: any[])
+
+> Repeats an action or promise.
+
+```typescript
+import assert from "assert"
+import { doRepeat, DoRepeatActionContext } from "@marcelkloubert/promises"
+
+const repeatCount = 5979
+const counter = 0
+
+const results = await doRepeat(repeatCount, async (context: DoRepeatActionContext) => {
+  console.log("context.state", String(context.state))
+  context.state = context.index * 2
+
+  ++counter
+
+  // do some work here
+})
+
+assert.strictEqual(results.length, repeatCount)
+assert.strictEqual(counter, results.length)
+```
+
 ### PromiseQueue
+
+> A promise queue.
 
 ```typescript
 import assert from "assert"

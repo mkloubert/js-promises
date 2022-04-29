@@ -23,7 +23,7 @@
 **/
 
 /**
- * An error, which is thrown if a condition failed,
+ * An error, which is thrown if a condition failed.
  */
 export class ConditionFailedError extends Error {
   /**
