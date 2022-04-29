@@ -67,6 +67,8 @@ export interface WithWorkerResult<T = any> {
  * ```
  * import { withWorker } from "@marcelkloubert/promises"
  *
+ * // this is code for Node.js
+ * // in a browser 'exitCode' will not exist
  * const { exitCode, lastMessage } = await withWorker("/path/to/worker_script.js")
  * ```
  *

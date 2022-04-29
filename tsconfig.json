@@ -1,9 +1,10 @@
 {
   "extends": "@marcelkloubert/tsconfig",
   "compilerOptions": {
+    "allowJs": true,
     "outDir": "lib",
     "rootDir": "src",
     "declaration": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "sandbox"]
 }

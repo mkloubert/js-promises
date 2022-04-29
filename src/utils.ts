@@ -24,6 +24,7 @@
   SOFTWARE.
 **/
 
+import { isPromiseLike, } from "./functions";
 import type { AsyncAction, } from "./types";
 
 export type AsAsyncResult<T = any> = (...args: any[]) => Promise<T>;
@@ -34,15 +35,9 @@ export interface InvokeInEnvironmentOptions<T = any> {
 }
 
 export function asAsync<T = any>(action: AsyncAction<T>): AsAsyncResult<T> {
-  if (action instanceof Promise) {
-    return () => {
-      return new Promise((resolve, reject) => {
-        action
-          .then(resolve)
-          .catch(reject);
-      });
-    };
-  } else {
+  throwIfNoFunctionOrPromise(action);
+
+  if (typeof action === "function") {
     if (typeof action !== "function") {
       throw new TypeError("action must be of type Promise or function");
     }
@@ -54,6 +49,13 @@ export function asAsync<T = any>(action: AsyncAction<T>): AsAsyncResult<T> {
         return action(...argList);
       }) as AsAsyncResult<T>;
     }
+  } else {
+    return () => {
+      return new Promise((resolve, reject) => {
+        action
+          .then(resolve, reject);
+      });
+    };
   }
 }
 
@@ -72,7 +74,7 @@ export function invokeInEnvironment<T = any>({ "browser": ifBrowser, "node": ifN
 }
 
 export function throwIfNoFunctionOrPromise(value: unknown) {
-  if (typeof value !== "function" && !(value instanceof Promise)) {
+  if (typeof value !== "function" && !isPromiseLike(value)) {
     throw new TypeError("value must be of type function or Promise");
   }
 }
