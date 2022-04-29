@@ -70,6 +70,10 @@ export function withTimeout<T = any>(action: WithTimeoutAction<T>, timeout: numb
     throw new TypeError("timeout must be of type number");
   }
 
+  if (timeout < 0) {
+    throw new RangeError("timeout must be at least 0");
+  }
+
   return new Promise<T>((resolve, reject) => {
     const timer = setTimeout(() => {
       reject(new TimeoutError());

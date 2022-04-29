@@ -16,7 +16,48 @@ npm i @marcelkloubert/promises
 
 ## Usage
 
+### PromiseQueue
+
+```typescript
+import assert from "assert"
+import { PromiseQueue } from "@marcelkloubert/promises"
+
+// create and start the queue
+const queue = new PromiseQueue({
+  "autoStart": true,
+  "concurrency": 10 // maximum 10 actions at the same time
+})
+
+const promises: Promise<any>[] = []
+let counter = 0
+
+// lets create 100 actions and
+// add them to queue
+const actionCount = 100
+for (let i = 0; i < actionCount; i++) {
+  promises.push(
+    queue.enqueue(async () => {
+      // do some (long) work here ...
+
+      ++counter
+    })
+  )
+}
+
+// wait until all actions have been executed
+await Promise.all(promises)
+
+// stop the queue
+queue.stop()
+
+// counter should now be the number of
+// enqueued actions
+assert.strictEqual(counter, promises.length)
+```
+
 ### withCancellation(action: WithCancellationAction, ...args: any[])
+
+> Invokes an action or promise, which can be cancelled.
 
 ```typescript
 import { CancellationError, withCancellation, WithCancellationActionContext } from "@marcelkloubert/promises"
@@ -45,6 +86,8 @@ try {
 
 ### withRetries(action: WithRetriesAction, optionsOrMaxRetries: WithRetriesOptions | number, ...args: any[])
 
+> Invokes an action or promise and throws an error if a maximum number of tries has been reached.
+
 ```typescript
 import { MaximumTriesReachedError, withRetries } from "@marcelkloubert/promises"
 
@@ -68,6 +111,8 @@ try {
 
 ### withTimeout(action: WithTimeoutAction, timeout: number, ...args: any[])
 
+> Invokes an action or promise and throws an error on a timeout.
+
 ```typescript
 import { TimeoutError, withTimeout } from "@marcelkloubert/promises"
 
@@ -88,9 +133,13 @@ const fooResult2 = await withTimeout(action(), 10000)
 
 ### withWorker(workerFileOrUrl: string | URL, options?: WithWorkerOptions)
 
+> Wraps the execution of a worker into a Promise.
+
 ```typescript
 import { withWorker } from "@marcelkloubert/promises"
 
+// this is code for Node.js
+// in a browser 'exitCode' will not exist
 const { exitCode, lastMessage } = await withWorker("/path/to/worker_script.js")
 ```
 

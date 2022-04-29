@@ -121,7 +121,6 @@ export function withCancellation<T>(action: WithCancellationAction, ...args: any
         "cancellationRequested": undefined!,
       };
 
-      // context.cancellationRequested
       Object.defineProperties(context, {
         "cancellationRequested": {
           "enumerable": true,

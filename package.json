@@ -12,7 +12,7 @@
     "docs": "del docs && typedoc --out docs src",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
-    "sandbox": "nodemon --watch 'sandbox.ts' --exec node -r ts-node/register --inspect=0.0.0.0:9229 sandbox.ts",
+    "sandbox": "nodemon --watch 'sandbox/**/*.ts' --exec node -r ts-node/register --inspect=0.0.0.0:9229 sandbox/index.ts",
     "test": "jest --no-cache"
   },
   "jest": {

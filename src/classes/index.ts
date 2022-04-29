@@ -23,3 +23,4 @@
 **/
 
 export * from "./CancelablePromise";
+export * from "./PromiseQueue";

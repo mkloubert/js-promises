@@ -22,6 +22,8 @@
   SOFTWARE.
 **/
 
+jest.setTimeout(60000);
+
 beforeAll(async () => {
   // something, that should be invoked before the first test
 });
