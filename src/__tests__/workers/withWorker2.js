@@ -22,6 +22,8 @@
   SOFTWARE.
 **/
 
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+const { parentPort } = require("worker_threads");
+
+parentPort.postMessage(23979);
+
+process.exit(5979);

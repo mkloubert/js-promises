@@ -4,7 +4,7 @@
 
 # @marcelkloubert/promises
 
-> Helpers for promises.
+> Helpers for promises, which work in Node and the browser.
 
 ## Install
 
@@ -16,10 +16,55 @@ npm i @marcelkloubert/promises
 
 ## Usage
 
-```typescript
-import { } from "@marcelkloubert/promises"
+### withTimeout(action: WithTimeoutAction, timeout: number, ...args: any[])
 
-// @TBD: PUT YOUR EXAMPLE CODE HERE
+```typescript
+import { TimeoutError, withTimeout } from "@marcelkloubert/promises"
+
+const action = () => {
+  return new Promise<string>((resolve) => {
+    setTimeout(() => result("FOO"), 1000)
+  })
+}
+
+// submit action as function
+// should NOT throw a TimeoutError
+const fooResult1 = await withTimeout(action, 10000)
+
+// submit action as Promise
+// this should throw a TimeoutError
+const fooResult2 = await withTimeout(action(), 10000)
+```
+
+### withRetries(action: WithRetriesAction, optionsOrMaxRetries: WithRetriesOptions | number, ...args: any[])
+
+```typescript
+import { MaximumTriesReachedError, withRetries } from "@marcelkloubert/promises"
+
+const myAsyncAction = async () => {
+  // do something here
+}
+
+try {
+  // try this action
+  await withTimeout(myAsyncAction, {
+    maxRetries: 9, // try invoke the myLongAction
+                   // with a maximum of 10 times
+                   // (first invocation + maxRetries)
+    waitBeforeRetry: 10000, // wait 10 seconds, before retry
+  })
+} catch (error) {
+  // error should be a MaximumTriesReachedError instance
+  console.error("Invokation of myLongAction failed", error)
+}
+```
+
+### withWorker(workerFileOrUrl: string | URL, options?: WithWorkerOptions)
+
+```typescript
+import { withWorker } from "@marcelkloubert/promises"
+
+const { exitCode, lastMessage } = await withWorker("/path/to/worker_script.js")
 ```
 
 ## Documentation

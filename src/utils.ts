@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 /**
   The MIT License (MIT)
 
@@ -24,7 +26,12 @@
 
 import type { AsyncAction, } from "./types";
 
-type AsAsyncResult<T = any> = (...args: any[]) => Promise<T>;
+export type AsAsyncResult<T = any> = (...args: any[]) => Promise<T>;
+
+export interface InvokeInEnvironmentOptions<T = any> {
+  browser: (...args: any[]) => T;
+  node: (...args: any[]) => T;
+}
 
 export function asAsync<T = any>(action: AsyncAction<T>): AsAsyncResult<T> {
   if (action instanceof Promise) {
@@ -53,6 +60,15 @@ export function asAsync<T = any>(action: AsyncAction<T>): AsAsyncResult<T> {
 export function isNullOrUndefined(value: unknown): value is (null | typeof undefined) {
   return typeof value === "undefined" ||
     value === null;
+}
+
+export function invokeInEnvironment<T = any>({ "browser": ifBrowser, "node": ifNode, }: InvokeInEnvironmentOptions<T>): T {
+  // @ts-ignore
+  if (typeof window === "undefined") {
+    return ifNode();
+  } else {
+    return ifBrowser();
+  }
 }
 
 export function throwIfNoFunctionOrPromise(value: unknown) {

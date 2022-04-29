@@ -22,6 +22,8 @@
   SOFTWARE.
 **/
 
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+/**
+ * A "not supported" error.
+ */
+export class NotSupportedError extends Error {
+}

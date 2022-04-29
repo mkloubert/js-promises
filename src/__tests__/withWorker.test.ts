@@ -22,6 +22,36 @@
   SOFTWARE.
 **/
 
-export * from "./withRetries";
-export * from "./withTimeout";
-export * from "./withWorker";
+import path from "path";
+import { withWorker, } from "../functions";
+
+const workerScript1 = path.join(__dirname, "workers/withWorker1.js");
+const workerScript2 = path.join(__dirname, "workers/withWorker2.js");
+const workerScript3 = path.join(__dirname, "workers/withWorker3.js");
+
+describe("withWorker() function", () => {
+  it("should execute the worker script 1", async () => {
+    const { exitCode, } = await withWorker(workerScript1);
+
+    expect(exitCode).toBe(5979);
+  });
+
+  it("should execute the worker script 2 with value for lastMessage", async () => {
+    const { exitCode, lastMessage, } = await withWorker<number>(workerScript2);
+
+    expect(exitCode).toBe(5979);
+    expect(typeof lastMessage).toBe("number");
+    expect(lastMessage).toBe(23979);
+  });
+
+  it("should fail, when execute worker script 3", async () => {
+    let hasFailed = false;
+    try {
+      await withWorker(workerScript3);
+    } catch {
+      hasFailed = true;
+    }
+
+    expect(hasFailed).toBe(true);
+  });
+});
