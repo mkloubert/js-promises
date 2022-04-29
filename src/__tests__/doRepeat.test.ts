@@ -74,7 +74,7 @@ describe("doRepeat() function", () => {
     }
 
     expect(exception instanceof PartlyFailedError).toBe(true);
-    expect(exception.innerError instanceof MyError).toBe(true);
+    expect(exception.lastError instanceof MyError).toBe(true);
     expect(Array.isArray(exception.succeeded)).toBe(true);
     expect(exception.succeeded.length).toBe(expectedSucceededCount);
   });

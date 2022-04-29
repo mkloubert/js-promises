@@ -24,7 +24,7 @@
   SOFTWARE.
 **/
 
-import { PartlyFailedError, } from "../errors";
+import { CancellationError, PartlyFailedError, } from "../errors";
 import { asAsync, } from "../utils";
 
 /**
@@ -47,6 +47,28 @@ export interface DoRepeatActionContext<S = any> {
    * A value, which can be shared beween the execution chain.
    */
   state?: S | undefined;
+}
+
+/**
+ * A condition for a 'doRepeat()' function.
+ *
+ * @param {DoRepeatConditionContext} context The context.
+ * @param {any[]} [args] Additional arguments for the action.
+ */
+export type DoRepeatCondition<S = any> = (context: DoRepeatConditionContext<S>, ...args: any[]) => any;
+
+/**
+ * A context for a 'DoRepeatCondition' function call.
+ */
+export interface DoRepeatConditionContext<S = any> {
+  /**
+   * Throws a 'CancellationError', which is directly rethrown.
+   */
+  cancel(): void;
+  /**
+   * Gets or sets the value for 'DoRepeatActionContext.state' prop.
+   */
+  state?: S;
 }
 
 /**
@@ -73,20 +95,30 @@ export interface DoRepeatActionContext<S = any> {
  * assert.strictEqual(counter, results.length)
  * ```
  *
- * @param {number} count The number of repeations.
+ * @param {number|DoRepeatCondition} countOrCondition The number of repeations or the condition.
  *
  * @returns {Promise<T[]>} The promise with the list of all results.
  *
  * @throws PartlyFailedErrorAt least one execution failed.
  * ```
  */
-export async function doRepeat<T = any, S = any>(count: number, action: DoRepeatAction<T, S>, ...args: any[]): Promise<T[]> {
-  if (typeof count !== "number") {
-    throw new TypeError("count must br of type number");
+export async function doRepeat<T = any, S = any>(countOrCondition: number | DoRepeatCondition, action: DoRepeatAction<T, S>, ...args: any[]): Promise<T[]> {
+  let condition: DoRepeatCondition;
+  if (typeof countOrCondition === "number") {
+    if (countOrCondition < 0) {
+      throw new RangeError("countOrCondition must be at least 0");
+    }
+
+    let counter = countOrCondition;
+    condition = async () => {
+      return counter-- >= 1;
+    };
+  } else {
+    condition = asAsync(countOrCondition);
   }
 
-  if (count < 0) {
-    throw new RangeError("count must be at least 0");
+  if (typeof condition !== "function") {
+    throw new TypeError("countOrCondition must br of type number or function");
   }
 
   const asyncAction = asAsync(action);
@@ -94,31 +126,42 @@ export async function doRepeat<T = any, S = any>(count: number, action: DoRepeat
   const results: T[] = [];
   let state: S | undefined;
 
-  for (let index = 0; index < count; index++) {
-    const actionContext: DoRepeatActionContext<S> = {
-      index,
-    };
-
-    Object.defineProperties(actionContext, {
-      "state": {
-        "enumerable": true,
-        "configurable": false,
-        "get": () => {
-          return state;
-        },
-        "set": (newValue: S) => {
-          state = newValue;
-        },
+  const setupStatePropFor = (obj: any) => {
+    Object.defineProperty(obj, "state", {
+      "enumerable": true,
+      "configurable": false,
+      "get": () => {
+        return state;
+      },
+      "set": (newValue: S) => {
+        state = newValue;
       },
     });
+  };
 
-    try {
+  try {
+    const conditionContext: DoRepeatConditionContext<S> = {
+      "cancel": () => {
+        throw new CancellationError();
+      },
+    };
+
+    setupStatePropFor(conditionContext);
+
+    let index = -1;
+    while (await condition(conditionContext, ...args)) {
+      const actionContext: DoRepeatActionContext<S> = {
+        "index": ++index,
+      };
+
+      setupStatePropFor(actionContext);
+
       results.push(
         await asyncAction(actionContext, ...args)
       );
-    } catch (ex) {
-      throw new PartlyFailedError(results, ex);
     }
+  } catch (ex) {
+    throw new PartlyFailedError(results, ex);
   }
 
   return results;

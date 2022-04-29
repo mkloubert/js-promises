@@ -55,7 +55,7 @@ export interface WaitForActionContext<S = any> {
 export type WaitForCondition<S = any> = (context: WaitForConditionContext<S>, ...args: any[]) => any;
 
 /**
- * A context for a 'waitFor()' function call.
+ * A context for a 'WaitForCondition' function call.
  */
 export interface WaitForConditionContext<S = any> {
   /**

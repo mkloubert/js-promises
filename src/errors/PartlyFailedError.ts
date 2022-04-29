@@ -30,10 +30,10 @@ export class PartlyFailedError<T = any> extends Error {
    * Initializes a new instance of that class.
    *
    * @param {T[]} succeeded The list of succeeded results.
-   * @param {any} innerError The inner error.
+   * @param {any} lastError The inner error.
    * @param {string} [message] The optional and custom message.
    */
-  public constructor(public readonly succeeded: T[], public readonly innerError: any, message?: string) {
+  public constructor(public readonly succeeded: T[], public readonly lastError: any, message?: string) {
     super(message);
   }
 }
