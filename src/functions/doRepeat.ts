@@ -82,14 +82,14 @@ export interface DoRepeatConditionContext<S = any> {
  * const repeatCount = 5979
  * const counter = 0
  *
- * const results = await doRepeat(repeatCount, async (context: DoRepeatActionContext) => {
+ * const results = await doRepeat(async (context: DoRepeatActionContext) => {
  *   console.log("context.state", String(context.state))
  *   context.state = context.index * 2
  *
  *   ++counter
  *
  *   // do some work here
- * })
+ * }, repeatCount)
  *
  * assert.strictEqual(results.length, repeatCount)
  * assert.strictEqual(counter, results.length)
@@ -97,6 +97,7 @@ export interface DoRepeatConditionContext<S = any> {
  *
  * @param {DoRepeatAction<T,S>} action The action to invoke.
  * @param {number|DoRepeatCondition} countOrCondition The number of repeations or the condition.
+ * @param {any[]} [args] Additional arguments for the action.
  *
  * @returns {Promise<T[]>} The promise with the list of all results.
  *
