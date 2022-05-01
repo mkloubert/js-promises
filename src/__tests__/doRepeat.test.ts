@@ -39,7 +39,7 @@ const rangeOfNumbers = (count: number): number[] => {
 
 describe("doRepeat() function", () => {
   it.each(rangeOfNumbers(100))("should repeat an action", async (repeatCount) => {
-    const results = await doRepeat(repeatCount, async (context) => {
+    const results = await doRepeat(async (context) => {
       if (context.index === 0) {
         context.state = 0;
       } else {
@@ -47,7 +47,7 @@ describe("doRepeat() function", () => {
       }
 
       return context.state * 2;
-    });
+    }, repeatCount);
 
     expect(results.length).toBe(repeatCount);
 
@@ -62,13 +62,13 @@ describe("doRepeat() function", () => {
 
     let exception: any;
     try {
-      await doRepeat(repeatCount, async (context) => {
+      await doRepeat(async (context) => {
         if (context.index === repeatCount - 1) {
           throw new MyError;
         }
 
         return context.index * 2;
-      });
+      }, repeatCount);
     } catch (ex) {
       exception = ex;
     }

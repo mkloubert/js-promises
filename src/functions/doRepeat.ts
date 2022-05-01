@@ -95,6 +95,7 @@ export interface DoRepeatConditionContext<S = any> {
  * assert.strictEqual(counter, results.length)
  * ```
  *
+ * @param {DoRepeatAction<T,S>} action The action to invoke.
  * @param {number|DoRepeatCondition} countOrCondition The number of repeations or the condition.
  *
  * @returns {Promise<T[]>} The promise with the list of all results.
@@ -102,7 +103,7 @@ export interface DoRepeatConditionContext<S = any> {
  * @throws PartlyFailedErrorAt least one execution failed.
  * ```
  */
-export async function doRepeat<T = any, S = any>(countOrCondition: number | DoRepeatCondition, action: DoRepeatAction<T, S>, ...args: any[]): Promise<T[]> {
+export async function doRepeat<T = any, S = any>(action: DoRepeatAction<T, S>, countOrCondition: number | DoRepeatCondition, ...args: any[]): Promise<T[]> {
   let condition: DoRepeatCondition;
   if (typeof countOrCondition === "number") {
     if (countOrCondition < 0) {

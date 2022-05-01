@@ -16,7 +16,7 @@ npm i @marcelkloubert/promises
 
 ## Usage
 
-### doRepeat(count: number, action: DoRepeatAction, ...args: any[]): Promise
+### doRepeat(action: DoRepeatAction, countOrCondition: number | DoRepeatCondition, ...args: any[]): Promise
 
 > Repeats an action or promise.
 
@@ -27,14 +27,14 @@ import { doRepeat, DoRepeatActionContext } from "@marcelkloubert/promises"
 const repeatCount = 5979
 const counter = 0
 
-const results = await doRepeat(repeatCount, async (context: DoRepeatActionContext) => {
+const results = await doRepeat(async (context: DoRepeatActionContext) => {
   console.log("context.state", String(context.state))
   context.state = context.index * 2
 
   ++counter
 
   // do some work here
-})
+}, repeatCount)
 
 assert.strictEqual(results.length, repeatCount)
 assert.strictEqual(counter, results.length)
