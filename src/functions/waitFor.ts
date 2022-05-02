@@ -84,7 +84,7 @@ export interface WaitForConditionContext<S = any> {
  *   // setup 'state' value for upcoming
  *   // action
  *   context.state = "Foo Bar BUZZ" // (s. below in action)
- * 
+ *
  *   // return a truthy value to keep waiting
  *   // otherwise falsy to start execution of action
  *   return !fs.existsSync("/path/to/my/file.xlsx")
