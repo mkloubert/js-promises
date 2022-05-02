@@ -75,7 +75,7 @@ export interface WaitForConditionContext<S = any> {
  * ```
  * import { waitFor, WaitForActionContext, WaitForCondition } from "@marcelkloubert/promises"
  *
- * const waitForFile = async (context) => {
+ * const waitForFile = async (context: WaitForCondition) => {
  *   // use context.cancel() function
  *   // to cancel the operation
  *   // maybe for a timeout
@@ -85,22 +85,18 @@ export interface WaitForConditionContext<S = any> {
  *   context.state = "Foo Bar BUZZ" (s. below)
  * }
  *
- * const result = await waitFor(waitForFile, async ({ state }: WaitForActionContext) => {
+ * const result = await waitFor(async ({ state }: WaitForActionContext) => {
  *   // state === "Foo Bar BUZZ" (s. above)
- * })
+ * }, waitForFile)
  * ```
  *
- * @param {WaitForCondition<S>} condition The condition.
  * @param {WaitForAction<T>} action The action to invoke.
+ * @param {WaitForCondition<S>} condition The condition.
  * @param {any[]} [args] Additional arguments for the action, if no promise.
  *
  * @returns {Promise<T>} The promise with the result of the action.
  */
-export async function waitFor<T = any, S = any>(condition: WaitForCondition<S>, action: WaitForAction<T>, ...args: any[]): Promise<T> {
-  if (typeof condition !== "function") {
-    throw new TypeError("condition must be type of function");
-  }
-
+export async function waitFor<T = any, S = any>(action: WaitForAction<T>, condition: WaitForCondition<S>, ...args: any[]): Promise<T> {
   const asyncAction = asAsync(action);
   const asyncCondition = asAsync(condition);
 

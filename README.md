@@ -21,23 +21,23 @@ npm i @marcelkloubert/promises
 > Repeats an action or promise.
 
 ```typescript
-import assert from "assert"
-import { doRepeat, DoRepeatActionContext } from "@marcelkloubert/promises"
+import assert from "assert";
+import { doRepeat, DoRepeatActionContext } from "@marcelkloubert/promises";
 
-const repeatCount = 5979
-const counter = 0
+const repeatCount = 5979;
+const counter = 0;
 
 const results = await doRepeat(async (context: DoRepeatActionContext) => {
-  console.log("context.state", String(context.state))
-  context.state = context.index * 2
+  console.log("context.state", String(context.state));
+  context.state = context.index * 2;
 
-  ++counter
+  ++counter;
 
   // do some work here
-}, repeatCount)
+}, repeatCount);
 
-assert.strictEqual(results.length, repeatCount)
-assert.strictEqual(counter, results.length)
+assert.strictEqual(results.length, repeatCount);
+assert.strictEqual(counter, results.length);
 ```
 
 ### isPromise(value: any): boolean
@@ -45,23 +45,23 @@ assert.strictEqual(counter, results.length)
 > Checks if a value is a Promise.
 
 ```typescript
-import { isPromise } from "@marcelkloubert/promises"
-import Bluebird from "bluebird"
+import { isPromise } from "@marcelkloubert/promises";
+import Bluebird from "bluebird";
 
 // all are (true)
-isPromise(Promise.resolve("Foo"))
-isPromise(Bluebird.resolve("Foo"))
+isPromise(Promise.resolve("Foo"));
+isPromise(Bluebird.resolve("Foo"));
 isPromise({
-  then: (onfulfilled?: Function, onrejected?: Function): any => { },
-  catch: (onrejected?: Function) => { },
-})
+  then: (onfulfilled?: Function, onrejected?: Function): any => {},
+  catch: (onrejected?: Function) => {},
+});
 
 // all are (false)
-isPromise("Foo")
+isPromise("Foo");
 isPromise({
-  then: (onfulfilled?: Function, onrejected?: Function): any => { },
-})
-isPromise(null)
+  then: (onfulfilled?: Function, onrejected?: Function): any => {},
+});
+isPromise(null);
 ```
 
 ### isPromiseLike(value: any): boolean
@@ -69,20 +69,20 @@ isPromise(null)
 > Checks if a value is a PromiseLike.
 
 ```typescript
-import { isPromiseLike } from "@marcelkloubert/promises"
-import Bluebird from "bluebird"
+import { isPromiseLike } from "@marcelkloubert/promises";
+import Bluebird from "bluebird";
 
 // all are (true)
-isPromiseLike(Promise.resolve("Foo"))
-isPromiseLike(Bluebird.resolve("Foo"))
+isPromiseLike(Promise.resolve("Foo"));
+isPromiseLike(Bluebird.resolve("Foo"));
 isPromiseLike({
-  then: (onfulfilled?: Function, onrejected?: Function): any => { },
-})
+  then: (onfulfilled?: Function, onrejected?: Function): any => {},
+});
 
 // all are (false)
-isPromiseLike("Foo")
-isPromiseLike({ })
-isPromiseLike(null)
+isPromiseLike("Foo");
+isPromiseLike({});
+isPromiseLike(null);
 ```
 
 ### PromiseQueue
@@ -90,62 +90,66 @@ isPromiseLike(null)
 > A promise queue.
 
 ```typescript
-import assert from "assert"
-import { PromiseQueue } from "@marcelkloubert/promises"
+import assert from "assert";
+import { PromiseQueue } from "@marcelkloubert/promises";
 
 // create and start the queue
 const queue = new PromiseQueue({
-  "autoStart": true,
-  "concurrency": 10 // maximum 10 actions at the same time
-})
+  autoStart: true,
+  concurrency: 10, // maximum 10 actions at the same time
+});
 
-const promises: Promise<any>[] = []
-let counter = 0
+const promises: Promise<any>[] = [];
+let counter = 0;
 
 // lets create 100 actions and
 // add them to queue
-const actionCount = 100
+const actionCount = 100;
 for (let i = 0; i < actionCount; i++) {
   promises.push(
     queue.enqueue(async () => {
       // do some (long) work here ...
 
-      ++counter
+      ++counter;
     })
-  )
+  );
 }
 
 // wait until all actions have been executed
-await Promise.all(promises)
+await Promise.all(promises);
 
 // stop the queue
-queue.stop()
+queue.stop();
 
 // counter should now be the number of
 // enqueued actions
-assert.strictEqual(counter, promises.length)
+assert.strictEqual(counter, promises.length);
 ```
 
-### waitFor(condition: WaitForCondition, action: WaitForAction, ...args: any[]): Promise
+### waitFor(action: WaitForAction, condition: WaitForCondition, ...args: any[]): Promise
 
 > Invokes an action or promise, but waits for a condition.
 
 ```typescript
-import { waitFor, WaitForActionContext, WaitForCondition } from "@marcelkloubert/promises"
+import {
+  waitFor,
+  WaitForActionContext,
+  WaitForCondition,
+} from "@marcelkloubert/promises";
 
-const waitForFile = async (context) => {
+const waitForFile = async (context: WaitForCondition) => {
   // use context.cancel() function
   // to cancel the operation
   // maybe for a timeout
 
   // setup 'state' value for upcoming
   // action
-  context.state = "Foo Bar BUZZ" (s. below)
-}
+  context.state = "Foo Bar BUZZ"(s.below);
+};
 
-const result = await waitFor(waitForFile, async ({ state }: WaitForActionContext) => {
+const result = await waitFor(async ({ state }: WaitForActionContext) => {
   // state === "Foo Bar BUZZ" (s. above)
-})
+}, waitForFile);
 ```
 
 ### withCancellation(action: WithCancellationAction, ...args: any[]): Promise
@@ -153,21 +157,27 @@ const result = await waitFor(waitForFile, async ({ state }: WaitForActionContext
 > Invokes an action or promise, which can be cancelled.
 
 ```typescript
-import { CancellationError, withCancellation, WithCancellationActionContext } from "@marcelkloubert/promises"
+import {
+  CancellationError,
+  withCancellation,
+  WithCancellationActionContext,
+} from "@marcelkloubert/promises";
 
-const promise = withCancellation(async (context: WithCancellationActionContext) => {
-  let hasBeenFinished = false
-  while (!context.cancellationRequested && !hasBeenFinished) {
-    // do some long work here
+const promise = withCancellation(
+  async (context: WithCancellationActionContext) => {
+    let hasBeenFinished = false;
+    while (!context.cancellationRequested && !hasBeenFinished) {
+      // do some long work here
+    }
   }
-})
+);
 
 setTimeout(() => {
-  promise.cancel("Promise action takes too long")
-}, 10000)
+  promise.cancel("Promise action takes too long");
+}, 10000);
 
 try {
-  await promise
+  await promise;
 } catch (ex) {
   if (ex instanceof CancellationError) {
     // has been cancelled
@@ -182,23 +192,26 @@ try {
 > Invokes an action or promise and throws an error if a maximum number of tries has been reached.
 
 ```typescript
-import { MaximumTriesReachedError, withRetries } from "@marcelkloubert/promises"
+import {
+  MaximumTriesReachedError,
+  withRetries,
+} from "@marcelkloubert/promises";
 
 const myAsyncAction = async () => {
   // do something here
-}
+};
 
 try {
   // try this action
   await withTimeout(myAsyncAction, {
     maxRetries: 9, // try invoke the myLongAction
-                   // with a maximum of 10 times
-                   // (first invocation + maxRetries)
+    // with a maximum of 10 times
+    // (first invocation + maxRetries)
     waitBeforeRetry: 10000, // wait 10 seconds, before retry
-  })
+  });
 } catch (error) {
   // error should be a MaximumTriesReachedError instance
-  console.error("Invokation of myLongAction failed", error)
+  console.error("Invokation of myLongAction failed", error);
 }
 ```
 
@@ -207,21 +220,21 @@ try {
 > Invokes an action or promise and throws an error on a timeout.
 
 ```typescript
-import { TimeoutError, withTimeout } from "@marcelkloubert/promises"
+import { TimeoutError, withTimeout } from "@marcelkloubert/promises";
 
 const action = () => {
   return new Promise<string>((resolve) => {
-    setTimeout(() => result("FOO"), 1000)
-  })
-}
+    setTimeout(() => result("FOO"), 1000);
+  });
+};
 
 // submit action as function
 // should NOT throw a TimeoutError
-const fooResult1 = await withTimeout(action, 10000)
+const fooResult1 = await withTimeout(action, 10000);
 
 // submit action as Promise
 // this should throw a TimeoutError
-const fooResult2 = await withTimeout(action(), 100)
+const fooResult2 = await withTimeout(action(), 100);
 ```
 
 ### withWorker(workerFileOrUrl: string | URL, options?: WithWorkerOptions): Promise
@@ -229,11 +242,11 @@ const fooResult2 = await withTimeout(action(), 100)
 > Wraps the execution of a worker into a Promise.
 
 ```typescript
-import { withWorker } from "@marcelkloubert/promises"
+import { withWorker } from "@marcelkloubert/promises";
 
 // this is code for Node.js
 // in a browser 'exitCode' will not exist
-const { exitCode, lastMessage } = await withWorker("/path/to/worker_script.js")
+const { exitCode, lastMessage } = await withWorker("/path/to/worker_script.js");
 ```
 
 ## Documentation
