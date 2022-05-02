@@ -1,6 +1,6 @@
 # Change Log (@marcelkloubert/promises)
 
-## 3.0.0
+## 3.0.1
 
 - **BREAKING CHANGE**: change order of parameters of [waitFor()](https://mkloubert.github.io/js-promises/modules.html#waitFor) to be more consistent with the other functions
 

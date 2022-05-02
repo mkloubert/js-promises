@@ -75,7 +75,7 @@ export interface WaitForConditionContext<S = any> {
  * ```
  * import { waitFor, WaitForActionContext, WaitForCondition } from "@marcelkloubert/promises"
  *
- * const waitForFile = async (context: WaitForCondition) => {
+ * const waitForFile: WaitForCondition = async (context) => {
  *   // use context.cancel() function
  *   // to cancel the operation
  *   // maybe for a timeout
