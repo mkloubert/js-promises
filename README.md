@@ -136,6 +136,7 @@ import {
   WaitForActionContext,
   WaitForCondition,
 } from "@marcelkloubert/promises";
+import fs from "fs";
 
 const waitForFile: WaitForCondition = async (context) => {
   // use context.cancel() function
@@ -144,7 +145,11 @@ const waitForFile: WaitForCondition = async (context) => {
 
   // setup 'state' value for upcoming
   // action
-  context.state = "Foo Bar BUZZ"(s.below);
+  context.state = "Foo Bar BUZZ"; // (s. below in action)
+
+  // return a truthy value to keep waiting
+  // otherwise falsy to start execution of action
+  return !fs.existsSync("/path/to/my/file.xlsx");
 };
 
 const result = await waitFor(async ({ state }: WaitForActionContext) => {
