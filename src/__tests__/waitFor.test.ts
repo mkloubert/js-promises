@@ -44,10 +44,10 @@ describe("waitFor() function", () => {
       });
     };
 
-    const result = await waitFor(condition, async ({ state, }, arg1: number) => {
+    const result = await waitFor(async ({ state, }, arg1: number) => {
       // 'state' should be 1234 (s. above)
       return resultSummand + arg1 + state;
-    }, arg1Value);
+    }, condition, arg1Value);
 
     expect(result).toBe(arg1Value + resultSummand + stateValue);
     expect(counter).toBe(maxCounterValue);
